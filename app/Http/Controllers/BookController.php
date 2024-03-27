@@ -8,10 +8,10 @@ use App\Models\Category;
 use App\Models\Student;
 use App\Models\Tag;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Str;
 
-use function Laravel\Prompts\select;
 
 class BookController extends Controller
 {
@@ -20,9 +20,12 @@ class BookController extends Controller
      */
     public function index()
     {
-        $search = request()->query('search');
+        $s = request()->query('search');
+        $search = Str::lower($s);
         if ($search) {
-            $books = Books::where('name', 'LIKE', "%{$search}%")->simplePaginate(10);
+            $books =
+                Books::where('name', 'LIKE', "%{$search}%")
+                ->simplePaginate(10);
         } else {
             $books = Books::simplePaginate(10);
         }
